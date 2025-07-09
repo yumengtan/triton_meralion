@@ -46,7 +46,7 @@ docker build -t triton_server_2:latest .
 Execute the following command to start the Triton server:
 
 ```bash
-docker run --gpus all -it --rm --net=host --shm-size=2G --ulimit memlock=-1 --ulimit stack=67108864 -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 -e HF_DATASETS_OFFLINE=1 -v ${PWD}/model_repository:/models -v ${PWD}/models:/model_files triton_server_2:latest tritonserver --model-repository=/models --log-verbose=1
+docker run --gpus all -it   --shm-size=2G   --ulimit memlock=-1   --ulimit stack=67108864   -e HF_HUB_OFFLINE=1   -e TRANSFORMERS_OFFLINE=1   -e HF_DATASETS_OFFLINE=1   -v ${PWD}/model_repository:/models   -v ${PWD}/models:/model_files   -p 8000:8000 -p 8001:8001 -p 8002:8002   trition_server   bash -c "pip install librosa soundfile transformers==4.50.1 && tritonserver --model-repository=/models --exit-on-error=false"
 ```
 
 ### Command Parameters Explained
@@ -193,11 +193,8 @@ The model expects two inputs:
 
 To use the model, send requests with:
 ```python
-# Audio input: base64-encoded WAV file
-audio_input = base64.b64encode(wav_file_bytes).decode('utf-8')
-
-# Task input: one of the supported tasks
-task_input = "transcribe"  # or any other supported task
+# Audio input: base64-encoded WAV file, describes about the audio file
+curl -X POST http://localhost:8000/v2/models/meralion_2_3b/infer   -H "Content-Type: application/json"   -d @describe_request.json
 ```
 
 ## Verification
