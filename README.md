@@ -191,10 +191,14 @@ The model expects two inputs:
 
 ### Example Usage
 
-To use the model, send requests with:
-```python
+To use the model, send requests either:
+```
 # Audio input: base64-encoded WAV file, describes about the audio file
 curl -X POST http://localhost:8000/v2/models/meralion_2_3b/infer   -H "Content-Type: application/json"   -d @describe_request.json
+```
+or 
+```
+python3 generate_request.py --task transcribe --audio test.wav
 ```
 
 ## Verification
